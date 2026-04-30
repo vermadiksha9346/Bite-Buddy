@@ -1,186 +1,221 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Food Assistant</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Food Assistant | Smart Meal Suggestions</title>
 
-<style>
-/* ===== GLOBAL ===== */
-body {
-  margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  /* Pink Animated Gradient */
-  background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #fad0c4, #ffdde1);
-  background-size: 400% 400%;
-  animation: gradientBG 10s ease infinite;
-  transition: background 0.3s ease, color 0.3s ease;
-  min-height: 100vh;
-}
+  <style>
+    /* Global Variables for Easy Customization */
+    :root {
+      --primary-color: #ff5e62;
+      --bg-gradient: linear-gradient(-45deg, #ff9a9e, #fad0c4, #fad0c4, #ffdde1);
+      --card-bg: #ffffff;
+      --text-main: #333333;
+      --transition-speed: 0.3s;
+    }
 
-@keyframes gradientBG {
-  0% {background-position: 0% 50%;}
-  50% {background-position: 100% 50%;}
-  100% {background-position: 0% 50%;}
-}
+    /* Dark Mode Theme Variables */
+    body.dark-mode {
+      --bg-gradient: #121212;
+      --card-bg: #1e1e1e;
+      --text-main: #f0f0f0;
+    }
 
-/* DARK MODE OVERRIDE */
-body.dark-mode {
-  background: #121212 !important; /* Removes the gradient */
-  color: #ffffff;
-}
+    /* Reset & Base Styles */
+    * { box-sizing: border-box; }
+    
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg-gradient);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      color: var(--text-main);
+      transition: background var(--transition-speed), color var(--transition-speed);
+      min-height: 100vh;
+    }
 
-.dark-mode .card {
-  background: #1e1e1e;
-  color: white;
-}
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
 
-/* HEADER */
-header {
-  text-align: center;
-  padding: 40px 20px;
-  color: white;
-  text-shadow: 0 2px 10px rgba(0,0,0,0.2);
-}
+    /* Header */
+    header {
+      text-align: center;
+      padding: 50px 20px;
+      color: white;
+    }
 
-header h1 { font-size: 3rem; margin: 0; }
+    header h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      margin-bottom: 10px;
+      text-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
 
-/* BUTTON */
-.toggle-btn {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 30px;
-  cursor: pointer;
-  background: #333;
-  color: white;
-  z-index: 1000;
-  font-weight: bold;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-}
+    /* Toggle Button */
+    .toggle-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 50px;
+      background: var(--text-main);
+      color: var(--card-bg);
+      cursor: pointer;
+      font-weight: 600;
+      z-index: 1000;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      transition: transform 0.2s;
+    }
 
-.dark-mode .toggle-btn { background: white; color: #333; }
+    .toggle-btn:active { transform: scale(0.95); }
 
-/* CARDS */
-.container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 25px;
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
+    /* Grid Layout */
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      max-width: 1200px;
+      margin: 0 auto 100px;
+      padding: 0 20px;
+    }
 
-.card {
-  background: white;
-  color: #333;
-  border-radius: 25px;
-  overflow: hidden;
-  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-  transition: 0.3s ease;
-}
+    /* Card Styling */
+    .card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+      text-decoration: none;
+      color: inherit;
+    }
 
-.card:hover { transform: translateY(-10px); }
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    }
 
-.card img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-}
+    .card img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      display: block;
+    }
 
-.card h3 { padding: 20px; margin: 0; text-align: center; }
+    .card h3 {
+      padding: 20px;
+      margin: 0;
+      text-align: center;
+      font-size: 1.25rem;
+    }
 
-/* CHAT HINT */
-.chat-hint {
-  position: fixed;
-  bottom: 90px;
-  right: 25px;
-  background: #ff5e62;
-  color: white;
-  padding: 12px 20px;
-  border-radius: 50px;
-  font-weight: bold;
-  animation: bounce 2s infinite;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-}
+    /* Floating Chat Notification */
+    .chat-hint {
+      position: fixed;
+      bottom: 100px;
+      right: 25px;
+      background: var(--primary-color);
+      color: white;
+      padding: 12px 25px;
+      border-radius: 50px;
+      font-weight: bold;
+      box-shadow: 0 5px 20px rgba(255, 94, 98, 0.4);
+      animation: float 3s ease-in-out infinite;
+      z-index: 900;
+    }
 
-@keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
 
-@media(max-width:600px){ header h1 { font-size: 2rem; } }
-</style>
+    /* Watson Web Chat adjustments */
+    #WACLauncher__Button {
+      bottom: 20px !important;
+      right: 20px !important;
+    }
+  </style>
 </head>
-
 <body>
 
-<button class="toggle-btn" id="modeToggle" onclick="toggleMode()">🌙 Dark Mode</button>
+  <button class="toggle-btn" id="themeToggle" aria-label="Toggle Dark Mode">🌙 Dark Mode</button>
 
-<header>
-  <h1>🍴 Food Assistant</h1>
-  <p>Find your next favorite meal today</p>
-</header>
+  <header>
+    <h1>🍴 Food Assistant</h1>
+    <p>Premium recipes and smart meal planning for your kitchen</p>
+  </header>
 
-<div class="container">
-  <!-- Card 1 -->
-  <div class="card">
-    <img src="https://images.unsplash.com/photo-1473093226795-af9932fe5856?q=80&w=600&auto=format&fit=crop" alt="Pasta">
-    <h3>Classic Italian Pasta</h3>
-  </div>
+  <main class="container">
+    <article class="card">
+      <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=600&auto=format&fit=crop" alt="Healthy Bowl">
+      <h3>Healthy Grain Bowls</h3>
+    </article>
 
-  <!-- Card 2 -->
-  <div class="card">
-    <img src="https://images.unsplash.com/photo-1589302168068-964664d93dc0?q=80&w=600&auto=format&fit=crop" alt="Biryani">
-    <h3>Spicy Hyderabadi Biryani</h3>
-  </div>
+    <article class="card">
+      <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=600&auto=format&fit=crop" alt="Italian Pizza">
+      <h3>Handmade Pizzas</h3>
+    </article>
 
-  <!-- Card 3 -->
-  <div class="card">
-    <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=600&auto=format&fit=crop" alt="Salad">
-    <h3>Mediterranean Salad</h3>
-  </div>
+    <article class="card">
+      <img src="https://images.unsplash.com/photo-1567620905732-2d1ec7bb7445?q=80&w=600&auto=format&fit=crop" alt="Fluffy Pancakes">
+      <h3>Breakfast Classics</h3>
+    </article>
 
-  <!-- Card 4 -->
-  <div class="card">
-    <img src="https://images.unsplash.com/photo-1551024601-bec78aea704b?q=80&w=600&auto=format&fit=crop" alt="Dessert">
-    <h3>Gourmet Donuts</h3>
-  </div>
-</div>
+    <article class="card">
+      <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=600&auto=format&fit=crop" alt="Grilled Meat">
+      <h3>Gourmet Grills</h3>
+    </article>
+  </main>
 
-<div class="chat-hint">💬 Ask me what to eat!</div>
+  <div class="chat-hint">💬 Need help deciding?</div>
 
-<script>
-/* TOGGLE MODE FUNCTION */
-function toggleMode() {
-  const body = document.body;
-  const btn = document.getElementById("modeToggle");
-  body.classList.toggle("dark-mode");
-  btn.innerHTML = body.classList.contains("dark-mode") ? "☀️ Light Mode" : "🌙 Dark Mode";
-}
+  <script>
+    /* Theme Toggle Logic */
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
 
-/* WATSON CHAT */
-window.watsonAssistantChatOptions = {
-  integrationID: "088c0e1b-aeaa-4868-bd3c-52dc391a9948",
-  region: "eu-de",
-  serviceInstanceID: "cc32a972-79fe-497f-b8ee-c375acd1d833",
-  showLauncher: true,
-  onLoad: async (instance) => {
-    await instance.render();
-    setTimeout(() => { instance.openWindow(); }, 4000);
-  }
-};
+    themeToggle.addEventListener('click', () => {
+      body.classList.toggle('dark-mode');
+      const isDark = body.classList.contains('dark-mode');
+      themeToggle.innerText = isDark ? "☀️ Light Mode" : "🌙 Dark Mode";
+      
+      // Optional: Save preference to local storage
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
 
-setTimeout(function () {
-  const t = document.createElement('script');
-  t.src = "https://web-chat.global.assistant.watson.appdomain.cloud/versions/" +
-    (window.watsonAssistantChatOptions.clientVersion || 'latest') +
-    "/WatsonAssistantChatEntry.js";
-  document.head.appendChild(t);
-});
-</script>
+    // Check for saved theme preference
+    if (localStorage.getItem('theme') === 'dark') {
+      body.classList.add('dark-mode');
+      themeToggle.innerText = "☀️ Light Mode";
+    }
 
+    /* IBM Watson Assistant Chat Config */
+    window.watsonAssistantChatOptions = {
+      integrationID: "088c0e1b-aeaa-4868-bd3c-52dc391a9948",
+      region: "eu-de",
+      serviceInstanceID: "cc32a972-79fe-497f-b8ee-c375acd1d833",
+      showLauncher: true,
+      onLoad: async (instance) => {
+        await instance.render();
+        // Auto-open chat after 4 seconds
+        setTimeout(() => {
+          instance.openWindow();
+        }, 4000);
+      }
+    };
+
+    setTimeout(function() {
+      const t = document.createElement('script');
+      t.src = "https://web-chat.global.assistant.watson.appdomain.cloud/versions/" +
+        (window.watsonAssistantChatOptions.clientVersion || 'latest') +
+        "/WatsonAssistantChatEntry.js";
+      document.head.appendChild(t);
+    });
+  </script>
 </body>
 </html>
