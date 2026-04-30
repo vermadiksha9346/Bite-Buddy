@@ -1,24 +1,186 @@
-<!-- FOOD CARDS -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Food Assistant</title>
+
+<style>
+/* ===== GLOBAL ===== */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  /* Pink Animated Gradient */
+  background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #fad0c4, #ffdde1);
+  background-size: 400% 400%;
+  animation: gradientBG 10s ease infinite;
+  transition: background 0.3s ease, color 0.3s ease;
+  min-height: 100vh;
+}
+
+@keyframes gradientBG {
+  0% {background-position: 0% 50%;}
+  50% {background-position: 100% 50%;}
+  100% {background-position: 0% 50%;}
+}
+
+/* DARK MODE OVERRIDE */
+body.dark-mode {
+  background: #121212 !important; /* Removes the gradient */
+  color: #ffffff;
+}
+
+.dark-mode .card {
+  background: #1e1e1e;
+  color: white;
+}
+
+/* HEADER */
+header {
+  text-align: center;
+  padding: 40px 20px;
+  color: white;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+header h1 { font-size: 3rem; margin: 0; }
+
+/* BUTTON */
+.toggle-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  background: #333;
+  color: white;
+  z-index: 1000;
+  font-weight: bold;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.dark-mode .toggle-btn { background: white; color: #333; }
+
+/* CARDS */
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.card {
+  background: white;
+  color: #333;
+  border-radius: 25px;
+  overflow: hidden;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+  transition: 0.3s ease;
+}
+
+.card:hover { transform: translateY(-10px); }
+
+.card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.card h3 { padding: 20px; margin: 0; text-align: center; }
+
+/* CHAT HINT */
+.chat-hint {
+  position: fixed;
+  bottom: 90px;
+  right: 25px;
+  background: #ff5e62;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 50px;
+  font-weight: bold;
+  animation: bounce 2s infinite;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@media(max-width:600px){ header h1 { font-size: 2rem; } }
+</style>
+</head>
+
+<body>
+
+<button class="toggle-btn" id="modeToggle" onclick="toggleMode()">🌙 Dark Mode</button>
+
+<header>
+  <h1>🍴 Food Assistant</h1>
+  <p>Find your next favorite meal today</p>
+</header>
+
 <div class="container">
-
+  <!-- Card 1 -->
   <div class="card">
-    <img src="https://images.unsplash.com/photo-1473093226795-af9932fe5856?auto=format&fit=crop&w=400&q=80" alt="Pasta">
-    <h3>Pasta</h3>
+    <img src="https://images.unsplash.com/photo-1473093226795-af9932fe5856?q=80&w=600&auto=format&fit=crop" alt="Pasta">
+    <h3>Classic Italian Pasta</h3>
   </div>
 
+  <!-- Card 2 -->
   <div class="card">
-    <img src="https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=400&q=80" alt="Biryani">
-    <h3>Biryani</h3>
+    <img src="https://images.unsplash.com/photo-1589302168068-964664d93dc0?q=80&w=600&auto=format&fit=crop" alt="Biryani">
+    <h3>Spicy Hyderabadi Biryani</h3>
   </div>
 
+  <!-- Card 3 -->
   <div class="card">
-    <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=400&q=80" alt="Salad">
-    <h3>Healthy Salad</h3>
+    <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=600&auto=format&fit=crop" alt="Salad">
+    <h3>Mediterranean Salad</h3>
   </div>
 
+  <!-- Card 4 -->
   <div class="card">
-    <img src="https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=400&q=80" alt="Desserts">
-    <h3>Desserts</h3>
+    <img src="https://images.unsplash.com/photo-1551024601-bec78aea704b?q=80&w=600&auto=format&fit=crop" alt="Dessert">
+    <h3>Gourmet Donuts</h3>
   </div>
-
 </div>
+
+<div class="chat-hint">💬 Ask me what to eat!</div>
+
+<script>
+/* TOGGLE MODE FUNCTION */
+function toggleMode() {
+  const body = document.body;
+  const btn = document.getElementById("modeToggle");
+  body.classList.toggle("dark-mode");
+  btn.innerHTML = body.classList.contains("dark-mode") ? "☀️ Light Mode" : "🌙 Dark Mode";
+}
+
+/* WATSON CHAT */
+window.watsonAssistantChatOptions = {
+  integrationID: "088c0e1b-aeaa-4868-bd3c-52dc391a9948",
+  region: "eu-de",
+  serviceInstanceID: "cc32a972-79fe-497f-b8ee-c375acd1d833",
+  showLauncher: true,
+  onLoad: async (instance) => {
+    await instance.render();
+    setTimeout(() => { instance.openWindow(); }, 4000);
+  }
+};
+
+setTimeout(function () {
+  const t = document.createElement('script');
+  t.src = "https://web-chat.global.assistant.watson.appdomain.cloud/versions/" +
+    (window.watsonAssistantChatOptions.clientVersion || 'latest') +
+    "/WatsonAssistantChatEntry.js";
+  document.head.appendChild(t);
+});
+</script>
+
+</body>
+</html>
